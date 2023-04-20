@@ -27,9 +27,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import React from "react";
 import ContactForm from "@/contact-form";
-
-const theme = createTheme({
+const lightTheme = createTheme({
     palette: {
+        mode: 'light',
         primary: {
             main: 'rgb(247,226,168)'
         },
@@ -41,10 +41,40 @@ const theme = createTheme({
         }
     }
 });
+
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+        primary: {
+            main: 'rgb(247,226,168)'
+        },
+        secondary: {
+            main: 'rgb(192,164,156)'
+        },
+        text: {
+            primary: '#FFFFFF'
+        }
+    }
+});
+
 export default function Home() {
     const [amountRaised, setAmountRaised] = React.useState('150/500,000');
     const [menuOpen, setMenuOpen] = React.useState(false);
+    const [theme, setTheme] = React.useState(lightTheme);
 
+    React.useEffect(() => {
+        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const toggleTheme = () => {
+            if (darkModeQuery.matches) {
+                setTheme(darkTheme);
+            } else {
+                setTheme(lightTheme);
+            }
+        };
+        darkModeQuery.addListener(toggleTheme);
+        toggleTheme();
+        return () => darkModeQuery.removeListener(toggleTheme);
+    }, []);
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
